@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>交小助 · 排班系统入口</title>
+  <style>
+    :root{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;color:#172033;background:#f6f2ef}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(520px,100%);padding:34px;border:1px solid #eadfd9;border-radius:24px;background:#fff;box-shadow:0 20px 60px #5b23331a;text-align:center}.mark{width:58px;height:58px;margin:auto;display:grid;place-items:center;border-radius:18px;background:#9f243d;color:#fff;font-size:28px;font-weight:800}h1{margin:18px 0 8px;font-size:25px}p{color:#667085;line-height:1.7}.status{margin:22px 0;padding:14px;border-radius:14px;background:#f9f4f2;color:#7a263a}.actions{display:grid;gap:10px}a{display:block;padding:13px 18px;border-radius:12px;text-decoration:none;font-weight:700}.primary{background:#9f243d;color:#fff}.secondary{border:1px solid #d8c8c3;color:#7a263a}small{display:block;margin-top:18px;color:#98a2b3}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="mark">交</div>
+    <h1>交小助排班系统</h1>
+    <p>正在根据当前网络所在地区选择入口，稍后会自动进入排班系统。</p>
+    <div class="status" id="status">正在检测网络地区与可用线路…</div>
+    <div class="actions">
+      <a class="primary" id="enter" href="https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev/">立即进入</a>
+      <a class="secondary" id="edgeone" href="#">使用腾讯国内优先线路</a>
+      <a class="secondary" href="https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev/">使用 Cloudflare 备用线路</a>
+    </div>
+    <small>若两条线路均无法连接，请开启 VPN 后重试。</small>
+  </main>
+  <script type="module">
+    import { preferredRoute } from './route-choice.mjs';
+    const cloudflare='https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev/';
+    const timeout=(promise,ms)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms))]);
+    const targetPromise=fetch('./target.json',{cache:'no-store'}).then(r=>r.json());
+    const countryPromise=timeout(fetch('https://api.country.is/').then(r=>r.json()).then(data=>data.country||''),2500).catch(()=>'');
+    Promise.all([targetPromise,countryPromise]).then(([target,country])=>{
+      const edgeone=target.url||cloudflare;
+      const route=preferredRoute(country,Intl.DateTimeFormat().resolvedOptions().timeZone);
+      const chosen=route==='edgeone'?edgeone:cloudflare;
+      document.querySelector('#edgeone').href=edgeone;
+      document.querySelector('#enter').href=chosen;
+      document.querySelector('#status').textContent=route==='edgeone'?'检测为中国大陆网络，已选择腾讯线路':'检测为海外网络，已选择 Cloudflare 线路';
+      setTimeout(()=>location.replace(chosen),1500);
+    }).catch(()=>{
+      document.querySelector('#status').textContent='自动检测暂不可用，请手动选择线路';
+    });
+  </script>
+</body>
+</html>
