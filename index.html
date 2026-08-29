@@ -22,18 +22,19 @@
     <small>若两条线路均无法连接，请开启 VPN 后重试。</small>
   </main>
   <script type="module">
-    import { preferredRoute } from './route-choice.mjs';
+    import { isFreshTarget, preferredRoute } from './route-choice.mjs';
     const cloudflare='https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev/';
     const timeout=(promise,ms)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms))]);
     const targetPromise=fetch('./target.json',{cache:'no-store'}).then(r=>r.json());
     const countryPromise=timeout(fetch('https://api.country.is/').then(r=>r.json()).then(data=>data.country||''),2500).catch(()=>'');
     Promise.all([targetPromise,countryPromise]).then(([target,country])=>{
-      const edgeone=target.url||cloudflare;
+      const fresh=isFreshTarget(target.updatedAt);
+      const edgeone=fresh&&target.url?target.url:cloudflare;
       const route=preferredRoute(country,Intl.DateTimeFormat().resolvedOptions().timeZone);
-      const chosen=route==='edgeone'?edgeone:cloudflare;
+      const chosen=route==='edgeone'&&fresh?edgeone:cloudflare;
       document.querySelector('#edgeone').href=edgeone;
       document.querySelector('#enter').href=chosen;
-      document.querySelector('#status').textContent=route==='edgeone'?'检测为中国大陆网络，已选择腾讯线路':'检测为海外网络，已选择 Cloudflare 线路';
+      document.querySelector('#status').textContent=route==='edgeone'&&fresh?'检测为中国大陆网络，已选择腾讯线路':route==='edgeone'?'腾讯线路正在刷新，请使用备用线路或稍后重试':'检测为海外网络，已选择 Cloudflare 线路';
       setTimeout(()=>location.replace(chosen),1500);
     }).catch(()=>{
       document.querySelector('#status').textContent='自动检测暂不可用，请手动选择线路';
