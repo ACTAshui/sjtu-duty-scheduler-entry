@@ -1,6 +1,6 @@
 const CLOUDFLARE_ORIGIN = "https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev";
 
-export async function onRequest({ request }) {
+export default async function onRequest({ request }) {
   const incoming = new URL(request.url);
   const target = new URL(incoming.pathname + incoming.search, CLOUDFLARE_ORIGIN);
   const headers = new Headers(request.headers);
