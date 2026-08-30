@@ -5,24 +5,36 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>交小助 · 排班系统入口</title>
   <style>
-    :root{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;color:#172033;background:#f6f2ef}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(520px,100%);padding:34px;border:1px solid #eadfd9;border-radius:24px;background:#fff;box-shadow:0 20px 60px #5b23331a;text-align:center}.mark{width:58px;height:58px;margin:auto;display:grid;place-items:center;border-radius:18px;background:#9f243d;color:#fff;font-size:28px;font-weight:800}h1{margin:18px 0 8px;font-size:25px}p{color:#667085;line-height:1.7}.status{margin:22px 0;padding:14px;border-radius:14px;background:#f9f4f2;color:#7a263a}.actions{display:grid;gap:10px}a{display:block;padding:13px 18px;border-radius:12px;text-decoration:none;font-weight:700}.primary{background:#9f243d;color:#fff}.secondary{border:1px solid #d8c8c3;color:#7a263a}small{display:block;margin-top:18px;color:#98a2b3}
+    :root{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;color:#172033;background:#f6f2ef}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(540px,100%);padding:34px;border:1px solid #eadfd9;border-radius:24px;background:#fff;box-shadow:0 20px 60px #5b23331a;text-align:center}.mark{width:58px;height:58px;margin:auto;display:grid;place-items:center;border-radius:18px;background:#9f243d;color:#fff;font-size:28px;font-weight:800}h1{margin:18px 0 8px;font-size:25px}p{color:#667085;line-height:1.7}.status{margin:20px 0 12px;padding:12px;border-radius:14px;background:#f9f4f2;color:#7a263a}.notice{margin:0 0 18px;padding:14px 16px;border:1px solid #f0dfb8;border-radius:14px;background:#fffaf0;color:#6c531d;text-align:left;line-height:1.65}.notice strong,.notice span{display:block}.notice strong{margin-bottom:3px;color:#513b0f}.actions{display:grid;gap:10px}a{display:block;padding:13px 18px;border-radius:12px;text-decoration:none;font-weight:700}.primary{background:#9f243d;color:#fff}.secondary{border:1px solid #d8c8c3;color:#7a263a}small{display:block;margin-top:18px;color:#7b8493}@media(max-width:560px){body{padding:16px}.card{padding:28px 20px;border-radius:20px}h1{font-size:23px}.notice{font-size:14px}}
   </style>
 </head>
 <body>
   <main class="card">
     <div class="mark">交</div>
     <h1>交小助排班系统</h1>
-    <p>正在进入排班系统。中国大陆网络请优先使用此入口。</p>
+    <p>这是排班系统的固定群入口，将进入腾讯 CloudBase 上海节点。</p>
     <div class="status" id="status">国内稳定入口 · 腾讯 CloudBase</div>
+    <div class="notice" role="note">
+      <strong>首次访问说明</strong>
+      <span>腾讯云免费默认域名会先显示官方风险提醒，这是正常页面，请点击“确定访问”继续。浏览器通常会暂时记住确认结果。</span>
+    </div>
     <div class="actions">
       <a class="primary" id="enter" href="https://sjtu-duty-scheduler-d1bu58a2846d-1476562505.ap-shanghai.app.tcloudbase.com/">立即进入</a>
       <a class="secondary" href="https://sjtu-duty-scheduler-d1bu58a2846d-1476562505.ap-shanghai.app.tcloudbase.com/">直接打开国内稳定入口</a>
     </div>
-    <small>本页会自动跳转；若未跳转，请点击上方按钮。</small>
+    <small id="countdown" aria-live="polite">8 秒后自动跳转；若未跳转，请点击上方按钮。</small>
   </main>
   <script type="module">
     const cloudBase='https://sjtu-duty-scheduler-d1bu58a2846d-1476562505.ap-shanghai.app.tcloudbase.com/';
-    setTimeout(()=>location.replace(cloudBase),1800);
+    const countdown=document.querySelector('#countdown');
+    let seconds=8;
+    const ticker=setInterval(()=>{
+      seconds-=1;
+      countdown.textContent=`${seconds} 秒后自动跳转；若未跳转，请点击上方按钮。`;
+      if(seconds<=0)clearInterval(ticker);
+    },1000);
+    const openApp=()=>location.replace(cloudBase);
+    setTimeout(openApp,8000);
   </script>
 </body>
 </html>

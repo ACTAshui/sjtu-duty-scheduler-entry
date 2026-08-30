@@ -26,6 +26,11 @@ test('entry page buttons and automatic redirect all use CloudBase', () => {
   assert.deepEqual(links, [cloudBaseUrl, cloudBaseUrl]);
   assert.match(html, /location\.replace\(cloudBase\)/);
   assert.match(html, /国内稳定入口/);
+  assert.match(html, /首次访问/);
+  assert.match(html, /确定访问/);
+  assert.match(html, /腾讯云免费默认域名/);
+  assert.match(html, /setTimeout\([^,]+,\s*(?:[5-9]\d{3}|[1-9]\d{4,})\)/s);
+  assert.doesNotMatch(html, /VPN|梯子/i);
 });
 
 test('Pages workflow publishes target.json without an EdgeOne refresh schedule', () => {
