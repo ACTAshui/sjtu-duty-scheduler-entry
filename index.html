@@ -12,17 +12,17 @@
   <main class="card">
     <div class="mark">交</div>
     <h1>交小助排班系统</h1>
-    <p>正在进入已经完整验证的排班系统。中国大陆部分网络需要先开启 VPN。</p>
-    <div class="status" id="status">正式系统使用 Cloudflare 数据库与注册接口</div>
+    <p>正在进入排班系统。中国大陆网络请优先使用此入口。</p>
+    <div class="status" id="status">国内稳定入口 · 腾讯 CloudBase</div>
     <div class="actions">
-      <a class="primary" id="enter" href="https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev/">立即进入</a>
-      <a class="secondary" href="https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev/">打开正式系统</a>
+      <a class="primary" id="enter" href="https://sjtu-duty-scheduler-d1bu58a2846d-1476562505.ap-shanghai.app.tcloudbase.com/">立即进入</a>
+      <a class="secondary" href="https://sjtu-duty-scheduler-d1bu58a2846d-1476562505.ap-shanghai.app.tcloudbase.com/">直接打开国内稳定入口</a>
     </div>
-    <small>请勿使用旧腾讯临时链接注册；其静态页面无法提交注册接口。</small>
+    <small>本页会自动跳转；若未跳转，请点击上方按钮。</small>
   </main>
   <script type="module">
-    const cloudflare='https://sjtu-duty-scheduler.sjtu-duty-scheduler.workers.dev/';
-    setTimeout(()=>location.replace(cloudflare),1800);
+    const cloudBase='https://sjtu-duty-scheduler-d1bu58a2846d-1476562505.ap-shanghai.app.tcloudbase.com/';
+    setTimeout(()=>location.replace(cloudBase),1800);
   </script>
 </body>
 </html>

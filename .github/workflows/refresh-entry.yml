@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  refresh:
+  publish:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -30,11 +30,11 @@ jobs:
       - name: Prepare public entry files
         run: |
           mkdir pages-public
-          cp index.html route-choice.mjs pages-public/
+          cp index.html route-choice.mjs target.json pages-public/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: pages-public
-      - name: Publish fixed entry page
+      - name: Publish stable CloudBase entry page
         id: deployment
         uses: actions/deploy-pages@v4
